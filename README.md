@@ -1,53 +1,58 @@
-# Eaglercraft Server Docker Image
+# Eaglercraft Server Docker Build Kit(Claude-AI assisted code)
 
-A complete, self-contained Eaglercraft server that runs Minecraft 1.5.2 in web browsers without requiring Minecraft accounts or installations. Perfect for offline family gaming!
+A complete Docker build framework for creating self-contained Eaglercraft servers that run browser-based Minecraft 1.5.2 without requiring accounts or installations. Perfect for educational purposes and offline family gaming!
 
 ## ✨ Features
 
 - 🎮 **Browser-based Minecraft 1.5.2** - No client installation required
-- 🚫 **No accounts needed** - Kids can play immediately with any username
+- 🚫 **No accounts needed** - Educational environment with any username
 - 🔒 **Completely offline** - No internet dependency after setup
-- 📦 **Single container** - Everything included (game server, proxy, web client)
+- 📦 **Containerized solution** - Everything packaged in Docker
 - 💾 **Automatic persistence** - Worlds and logs saved locally in `./data/`
-- 🔧 **Zero configuration** - Works out of the box with `docker-compose up -d`
+- 🔧 **Zero configuration** - Works out of the box after building
 - 🏥 **Health monitoring** - Built-in health checks and status reporting
-- 👨‍👩‍👧‍👦 **Family-friendly** - Perfect for kids' multiplayer gaming
+- 🎓 **Educational focus** - Perfect for learning containerization and game servers
+
+## 📋 Prerequisites
+
+- Docker and Docker Compose installed
+- Git (to clone this repository)
+- 4GB+ RAM available
+- Ports 8080 and 25565 available
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Docker and Docker Compose installed
-- Ports 8080 and 25565 available
+### Step 1: Clone the Repository
 
-### Option 1: Docker Compose (Recommended)
-
-1. **Download the compose file:**
 ```bash
-git clone https://github.com/hackboxguy/eaglercraft-docker.git;cd eaglercraft-docker
+git clone https://github.com/hackboxguy/eaglercraft-docker.git
+cd eaglercraft-docker
 ```
 
-2. **Start the server (zero configuration required):**
+### Step 2: Build the Docker Image
+
 ```bash
+# Build the Eaglercraft server image
+docker build -t eaglercraft-server:local .
+```
+
+**⏱️ Build time:** 5-15 minutes depending on your internet connection
+
+### Step 3: Deploy with Docker Compose
+
+```bash
+# Start the server (automatically sets up directories and permissions)
 docker-compose up -d
 ```
 
-3. **That's it!** The setup automatically:
-   - ✅ Downloads the Docker image
-   - ✅ Creates data directories with proper permissions
-   - ✅ Starts all services
-   - ✅ Makes game data persistent in `./data/`
-
-### Option 2: Docker Run (Simple)
+### Step 4: Verify Everything is Running
 
 ```bash
-docker run -d \
-  --name eaglercraft \
-  -p 8080:8080 \
-  -p 25565:25565 \
-  -v $(pwd)/data/worlds:/opt/eaglercraft/worlds \
-  -v $(pwd)/data/logs:/opt/eaglercraft/logs \
-  --restart unless-stopped \
-  hackboxguy/eaglercraft-server:latest
+# Check container status
+docker-compose ps
+
+# Watch startup logs
+docker-compose logs -f eaglercraft
 ```
 
 ## 🎯 How to Connect and Play
@@ -60,22 +65,35 @@ docker run -d \
 6. **Enter server address:** `localhost:25565` (or `YOUR_SERVER_IP:25565`)
 7. **Click "Connect"** and start building! 🏗️
 
-## 📋 Server Information
+## 📦 What Gets Built
 
-| Service | Port | Description |
-|---------|------|-------------|
-| **Web Client** | 8080 | Browser-based Eaglercraft client |
-| **Game Server** | 25565 | Minecraft server (WebSocket proxy) |
+The build process creates a container with:
+- **Ubuntu 20.04** base system
+- **OpenJDK 8** runtime environment
+- **Eaglercraft server components** (downloaded during build)
+- **Web client files** for browser access
+- **Supervisord** for process management
+- **Automatic configuration** with proper networking
 
-| Path | Description |
-|------|-------------|
-| `./data/worlds/` | Persistent Minecraft worlds |
-| `./data/logs/` | Server logs and diagnostics |
+## 📋 Build Process Details
+
+```bash
+# The Dockerfile performs these steps:
+1. 📥 Downloads Eaglercraft source from multiple fallback repositories
+2. ✅ Validates all required server components
+3. 🔧 Configures proper port separation (Bukkit: 25566, Proxy: 25565)
+4. 🏠 Sets up directory structure and permissions
+5. 📜 Creates management and health check scripts
+6. 🚀 Configures supervisor for service management
+```
 
 ## 🔧 Management Commands
 
 ### Basic Operations
 ```bash
+# Build image
+docker build -t eaglercraft-server:local .
+
 # Start server
 docker-compose up -d
 
@@ -90,6 +108,9 @@ docker-compose restart
 
 # Check status
 docker-compose ps
+
+# Rebuild and restart
+docker-compose down && docker build -t eaglercraft-server:local . && docker-compose up -d
 ```
 
 ### Advanced Monitoring
@@ -139,38 +160,33 @@ sudo ufw allow from 192.168.1.0/24 to any port 8080
 sudo ufw allow from 192.168.1.0/24 to any port 25565
 ```
 
-## 🎮 Game Features
+## 📁 Repository Structure
 
-✅ **Creative and Survival modes**  
-✅ **Multiplayer gameplay** (up to 20 players by default)  
-✅ **World generation and building**  
-✅ **Inventory management**  
-✅ **Basic redstone mechanics**  
-✅ **Animals and monsters**  
-✅ **Day/night cycle**  
-✅ **Weather effects**  
-✅ **Persistent worlds** - builds are saved automatically  
-
-## ⚙️ Configuration
-
-### Environment Variables
-```yaml
-environment:
-  - EAGLERCRAFT_MAX_PLAYERS=20                    # Max players (default: 20)
-  - EAGLERCRAFT_MOTD=Welcome to Eaglercraft!      # Server message of the day
 ```
-
-### Custom Configuration
-```bash
-# Edit server settings (after first run)
-docker exec -it eaglercraft-server nano /opt/eaglercraft/bukkit/server.properties
-docker exec -it eaglercraft-server nano /opt/eaglercraft/bungee/config.yml
-
-# Restart to apply changes
-docker-compose restart
+eaglercraft-docker/
+├── Dockerfile              # ← Build instructions for the server
+├── docker-compose.yml      # ← Deployment configuration
+├── README.md               # ← This documentation
+├── DISCLAIMER.md           # ← Legal notices and educational use
+└── data/                   # ← Auto-created on first run
+    ├── worlds/             # ← Persistent Minecraft worlds
+    └── logs/               # ← Server logs and diagnostics
 ```
 
 ## 🛠️ Troubleshooting
+
+### Build Issues
+```bash
+# If build fails due to network issues
+docker build --no-cache -t eaglercraft-server:local .
+
+# Check build logs for specific errors
+docker build -t eaglercraft-server:local . 2>&1 | tee build.log
+
+# Clean build (removes all cached layers)
+docker system prune -a
+docker build -t eaglercraft-server:local .
+```
 
 ### Server Won't Start
 ```bash
@@ -180,6 +196,9 @@ docker-compose logs eaglercraft
 
 # Check service status
 docker exec eaglercraft-server supervisorctl status
+
+# Verify image was built correctly
+docker images | grep eaglercraft-server
 ```
 
 ### Can't Connect from Browser
@@ -196,16 +215,12 @@ docker exec eaglercraft-server supervisorctl status
 4. **Try different browsers** or clear browser cache
 5. **Check browser console** (F12 → Console) for WebSocket errors
 
-### Permission Issues
-```bash
-# Fix data directory permissions
-sudo chown -R 1000:1000 data/
-docker-compose restart
-```
-
 ### Performance Issues
 ```bash
-# Check resource usage
+# Check resource usage during build
+docker system df
+
+# Check runtime resource usage
 docker stats eaglercraft-server
 
 # Adjust memory limits in docker-compose.yml
@@ -219,37 +234,19 @@ services:
           memory: 1G
 ```
 
-## 📁 Directory Structure
-
-After running `docker-compose up -d`:
-```
-./
-├── docker-compose.yml
-└── data/                     # ← Auto-created with proper permissions
-    ├── worlds/               # ← Minecraft worlds (persistent)
-    │   ├── world/           # ← Main overworld
-    │   ├── world_nether/    # ← Nether dimension  
-    │   └── world_the_end/   # ← End dimension
-    └── logs/                 # ← Server logs
-        ├── bukkit.log       # ← Game server logs
-        ├── bungee.log       # ← Proxy server logs
-        └── web.log          # ← Web server logs
-```
-
 ## 🔧 System Requirements
 
+### For Building:
+- **CPU:** 2+ cores recommended
+- **RAM:** 4GB+ available during build
+- **Storage:** 5GB+ free space
+- **Network:** Stable internet for downloading components
+
+### For Running:
 - **CPU:** 1+ cores (2+ recommended for multiple players)
 - **RAM:** 2GB+ available (4GB+ recommended)
-- **Storage:** 2GB+ for Docker image, additional space for worlds
+- **Storage:** 2GB+ for built image, additional space for worlds
 - **Network:** Ports 8080 and 25565 accessible
-- **OS:** Linux, macOS, Windows with Docker support
-
-## 📦 What's Inside
-
-The container runs three coordinated services:
-- **Bukkit Server** (port 25566 internal) - Minecraft 1.5.2 game logic
-- **BungeeCord Proxy** (port 25565 external) - WebSocket to TCP proxy  
-- **Python Web Server** (port 8080) - Serves the Eaglercraft client
 
 ## 🏗️ Architecture
 
@@ -259,20 +256,52 @@ Browser (8080) → Python Web Server → Eaglercraft Client
 Game Client → WebSocket (25565) → BungeeCord Proxy → Bukkit Server (25566)
 ```
 
-## 📜 License & Credits
+The container runs three coordinated services:
+- **Bukkit Server** (port 25566 internal) - Minecraft 1.5.2 game logic
+- **BungeeCord Proxy** (port 25565 external) - WebSocket to TCP proxy  
+- **Python Web Server** (port 8080) - Serves the Eaglercraft client
 
-This project builds upon amazing open-source work:
+## 🎓 Educational Use
+
+This project is designed for:
+- **Learning Docker containerization**
+- **Understanding multi-service architectures**
+- **Exploring network proxying and WebSocket technology**
+- **Educational gaming environments**
+- **Family offline gaming setups**
+
+## ⚖️ Legal Notice
+
+This project is for **educational and research purposes only**. It builds upon open-source Eaglercraft implementations. Users are responsible for:
+- Ensuring compliance with applicable laws
+- Respecting intellectual property rights
+- Using only for educational/research purposes
+- Not distributing built images commercially
+
+
+## 📜 Credits & License
+
+This Docker build framework utilizes:
 - **[Eaglercraft](https://github.com/lax1dude/eaglercraft)** by LAX1DUDE - Browser-based Minecraft port
 - **[CraftBukkit](https://getbukkit.org/)** - Minecraft 1.5.2 server implementation  
 - **[BungeeCord](https://www.spigotmc.org/wiki/bungeecord/)** - Minecraft proxy server
 
 
-## 🏷️ Docker Hub Tags
+## 🔄 Updates and Maintenance
 
-- `hackboxguy/eaglercraft-server:latest` - Latest stable release
-- `hackboxguy/eaglercraft-server:v1.0` - Version 1.0
-- `hackboxguy/eaglercraft-server:ubuntu20.04` - Ubuntu 20.04 based
+```bash
+# Update to latest version
+git pull origin main
+
+# Rebuild with updates
+docker-compose down
+docker build --no-cache -t eaglercraft-server:local .
+docker-compose up -d
+
+# Clean old images (optional)
+docker image prune -f
+```
 
 ---
 
-**🎮 Happy Building! Enjoy your offline Minecraft adventures! ⛏️🏰**
+**🎮 Happy Building! Enjoy learning Docker while creating offline Minecraft adventures! ⛏️🐳**

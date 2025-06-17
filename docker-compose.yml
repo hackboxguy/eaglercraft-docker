@@ -17,7 +17,7 @@ services:
     user: root
 
   eaglercraft:
-    image: hackboxguy/eaglercraft-server:latest
+    image: eaglercraft-server:local  # ← Uses locally built image
     container_name: eaglercraft-server
     depends_on:
       eaglercraft-init:
