@@ -23,7 +23,7 @@ A complete, self-contained Eaglercraft server that runs Minecraft 1.5.2 in web b
 
 1. **Download the compose file:**
 ```bash
-curl -O https://raw.githubusercontent.com/hackboxguy/eaglercraft-docker/main/docker-compose.yml
+git clone https://github.com/hackboxguy/eaglercraft-docker.git;cd eaglercraft-docker
 ```
 
 2. **Start the server (zero configuration required):**
