@@ -1,0 +1,46 @@
+services:
+  # Init container to set up directories and permissions automatically
+  eaglercraft-init:
+    image: alpine:latest
+    volumes:
+      - ./data:/setup-data
+    command: |
+      sh -c "
+        echo '🔧 Setting up Eaglercraft data directories...'
+        mkdir -p /setup-data/worlds /setup-data/logs
+        chown -R 1000:1000 /setup-data
+        chmod -R 755 /setup-data
+        echo '✅ Directories created and permissions set'
+        echo '📁 Worlds: /setup-data/worlds (owned by 1000:1000)'
+        echo '📁 Logs: /setup-data/logs (owned by 1000:1000)'
+      "
+    user: root
+
+  eaglercraft:
+    image: hackboxguy/eaglercraft-server:latest
+    container_name: eaglercraft-server
+    depends_on:
+      eaglercraft-init:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"    # Web client port
+      - "25565:25565"  # Game server port
+    volumes:
+      - ./data/worlds:/opt/eaglercraft/worlds
+      - ./data/logs:/opt/eaglercraft/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/eaglercraft/scripts/health-check.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    environment:
+      - EAGLERCRAFT_MAX_PLAYERS=20
+      - EAGLERCRAFT_MOTD=Welcome to Eaglercraft Server!
+    networks:
+      - eaglercraft_network
+
+networks:
+  eaglercraft_network:
+    driver: bridge
