@@ -100,8 +100,7 @@ Press `Ctrl+C` to stop following the logs (the server keeps running in the backg
 
 ## 📊 Admin Dashboard (Plan Player Analytics)
 
-The server includes [Plan Player Analytics](https://www.playeranalytics.net/) with the
-[EaglerXPlan](https://modrinth.com/plugin/eaglerxplan) addon for Eaglercraft-specific tracking.
+The server includes [Plan Player Analytics](https://www.playeranalytics.net/) for server monitoring.
 
 **Access the dashboard:** `http://localhost:8082` (or `http://YOUR_SERVER_IP:8082`)
 
@@ -109,7 +108,6 @@ The dashboard provides:
 - Real-time server performance (TPS, CPU, RAM)
 - Player session history and activity
 - Online player tracking
-- Eaglercraft client version and browser info (via EaglerXPlan)
 
 > **Note:** The dashboard starts automatically with PandaSpigot. It may take a minute after
 > server startup to become available. No login is required on HTTP mode (LAN-only access).
@@ -161,7 +159,6 @@ The build process creates a container with:
 | Plugin | Purpose |
 |--------|---------|
 | **Plan Player Analytics** | Web dashboard for server/player stats (port 8082) |
-| **EaglerXPlan** | Eaglercraft-specific analytics (client version, browser info) |
 | **Vault** | Economy and permissions API bridge |
 | **LuckPerms** | Permissions management (groups, roles) |
 | **EssentialsX** | Homes, warps, teleport, kits, economy, chat formatting |

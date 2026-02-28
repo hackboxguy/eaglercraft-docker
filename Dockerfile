@@ -169,9 +169,6 @@ RUN echo "=== Downloading PandaSpigot plugins ===" && \
     curl -fSL -o $EAGLER_HOME/spigot/plugins/Plan.jar \
     "https://github.com/plan-player-analytics/Plan/releases/download/5.6.2965/Plan-5.6-build-2965.jar" && \
     echo "Plan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/Plan.jar | awk '{print $5}')" && \
-    curl -fSL -o $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar \
-    "https://cdn.modrinth.com/data/c5O9eM9C/versions/L2m8XjSl/EaglerXPlan.jar" && \
-    echo "EaglerXPlan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/spigot/plugins/Vault.jar \
     "https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar" && \
     echo "Vault downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/Vault.jar | awk '{print $5}')" && \
@@ -188,7 +185,7 @@ RUN echo "=== Downloading PandaSpigot plugins ===" && \
     "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsXSpawn-2.19.7.jar" && \
     echo "EssentialsXSpawn downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EssentialsXSpawn.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/spigot/plugins/WorldEdit.jar \
-    "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1/worldedit-bukkit-6.1.jar" && \
+    "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1.2/worldedit-bukkit-6.1.2.jar" && \
     echo "WorldEdit downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/WorldEdit.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/spigot/plugins/WorldGuard.jar \
     "https://maven.enginehub.org/repo/com/sk89q/worldguard/6.1/worldguard-6.1.jar" && \
