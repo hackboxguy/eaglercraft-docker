@@ -229,6 +229,7 @@ RUN printf '%s\n' \
     'touch_controls_mode: "auto"' \
     'eagler_players_vanilla_skin: "lax1dude"' \
     'enable_voice_chat: false' \
+    'debug_log_new_channels: true' \
     > $EAGLER_HOME/server/plugins/EaglercraftXServer/settings.yml
 
 # Configure EaglerWeb settings.json
@@ -291,7 +292,7 @@ RUN printf '%s\n' \
     '' \
     'echo "Starting Paper 1.12.2 server..."' \
     'cd /opt/eaglercraft/server' \
-    'exec su -s /bin/bash eaglercraft -c "java -Xmx1536M -Xms512M -jar Paper.jar nogui 2>&1 | tee /opt/eaglercraft/logs/server.log"' \
+    'exec su -s /bin/bash eaglercraft -c "java -Djava.net.preferIPv4Stack=true -Xmx1536M -Xms512M -jar Paper.jar nogui 2>&1 | tee /opt/eaglercraft/logs/server.log"' \
     > $EAGLER_HOME/scripts/start-services.sh
 
 # Create health check script (single port — Paper handles everything)
