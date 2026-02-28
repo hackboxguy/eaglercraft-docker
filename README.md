@@ -98,6 +98,22 @@ Press `Ctrl+C` to stop following the logs (the server keeps running in the backg
 
 > **Tip:** To find your server's IP for other devices on your network, run: `hostname -I | awk '{print $1}'`
 
+## 📊 Admin Dashboard (Plan Player Analytics)
+
+The server includes [Plan Player Analytics](https://www.playeranalytics.net/) with the
+[EaglerXPlan](https://modrinth.com/plugin/eaglerxplan) addon for Eaglercraft-specific tracking.
+
+**Access the dashboard:** `http://localhost:8082` (or `http://YOUR_SERVER_IP:8082`)
+
+The dashboard provides:
+- Real-time server performance (TPS, CPU, RAM)
+- Player session history and activity
+- Online player tracking
+- Eaglercraft client version and browser info (via EaglerXPlan)
+
+> **Note:** The dashboard starts automatically with PandaSpigot. It may take a minute after
+> server startup to become available. No login is required on HTTP mode.
+
 ## 📦 What Gets Built
 
 The build process creates a container with:
@@ -108,6 +124,8 @@ The build process creates a container with:
 - **EaglerXServer v1.0.8** - Eaglercraft WebSocket protocol plugin
 - **EaglerWeb** - Serves the web client via HTTP on the same port
 - **EaglercraftX 1.8 web client** - Browser-based game client
+- **Plan Player Analytics** - Web dashboard for server/player stats (port 8082)
+- **EaglerXPlan** - Eaglercraft-specific analytics addon by lax1dude
 - **Supervisord** for process management
 
 ## 🏗️ Architecture
@@ -122,10 +140,12 @@ BungeeCord Proxy (port 8081)
                                                          |
                                                     Game Worlds
                                                   (persistent volume)
+
+Admin Browser (port 8082) --> Plan Player Analytics Dashboard (port 8804 internal)
 ```
 
 The container runs two coordinated services:
-- **PandaSpigot 1.8.8** (port 25565 internal) - Minecraft 1.8.8 game server
+- **PandaSpigot 1.8.8** (port 25565 internal) - Minecraft 1.8.8 game server + Plan analytics
 - **BungeeCord** (port 8081 external) - Serves web client AND handles WebSocket game connections
 
 ## 🔧 Management Commands

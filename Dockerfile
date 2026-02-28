@@ -124,7 +124,7 @@ RUN apt-get update && \
 
 # Create eaglercraft user with UID 1000 (must match init container's chown 1000:1000)
 RUN useradd -u 1000 -m -d $EAGLER_HOME -s /bin/bash $EAGLER_USER && \
-    mkdir -p $EAGLER_HOME/spigot && \
+    mkdir -p $EAGLER_HOME/spigot/plugins && \
     mkdir -p $EAGLER_HOME/bungee/plugins/EaglerWeb/web && \
     mkdir -p $EAGLER_HOME/bungee/plugins/EaglercraftXServer && \
     mkdir -p $EAGLER_HOME/worlds && \
@@ -163,6 +163,15 @@ RUN echo "=== Downloading EaglerXServer plugins ===" && \
     "https://github.com/lax1dude/eaglerxserver/releases/download/v1.0.8/EaglerWeb.jar" && \
     echo "EaglerXServer downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglercraftXServer.jar | awk '{print $5}')" && \
     echo "EaglerWeb downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglerWeb.jar | awk '{print $5}')"
+
+# Download Plan Player Analytics and EaglerXPlan plugins (for PandaSpigot)
+RUN echo "=== Downloading Plan Player Analytics ===" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/Plan.jar \
+    "https://github.com/plan-player-analytics/Plan/releases/download/5.6.2965/Plan-5.6-build-2965.jar" && \
+    echo "Plan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/Plan.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar \
+    "https://cdn.modrinth.com/data/c5O9eM9C/versions/L2m8XjSl/EaglerXPlan.jar" && \
+    echo "EaglerXPlan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar | awk '{print $5}')"
 
 # Copy web client files from builder stage
 COPY --from=builder --chown=$EAGLER_USER:$EAGLER_USER /build/web $EAGLER_HOME/bungee/plugins/EaglerWeb/web/
@@ -468,8 +477,9 @@ RUN chmod +x $EAGLER_HOME/scripts/*.sh
 # Volumes for persistent data
 VOLUME ["$EAGLER_HOME/worlds", "$EAGLER_HOME/logs"]
 
-# Single port: BungeeCord serves both web client (HTTP) and game (WebSocket)
-EXPOSE 8081
+# BungeeCord serves both web client (HTTP) and game (WebSocket)
+# Plan Player Analytics dashboard
+EXPOSE 8081 8804
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
