@@ -19,7 +19,7 @@ A complete Docker build framework for creating self-contained EaglercraftX 1.8.8
 ## 📋 Prerequisites
 
 - 4GB+ free RAM (2GB for running, more during build)
-- Port 8081 available on your machine
+- Ports 8081 (game) and 8082 (admin dashboard) available on your machine
 
 ### Install Docker (if not already installed)
 
@@ -112,7 +112,27 @@ The dashboard provides:
 - Eaglercraft client version and browser info (via EaglerXPlan)
 
 > **Note:** The dashboard starts automatically with PandaSpigot. It may take a minute after
-> server startup to become available. No login is required on HTTP mode.
+> server startup to become available. No login is required on HTTP mode (LAN-only access).
+
+### Server Console Commands
+
+You can manage the server through the PandaSpigot console:
+
+```bash
+# Attach to the PandaSpigot console
+docker exec -it eaglercraftx-server supervisorctl fg spigot
+
+# Useful commands (type these in the console):
+#   list                          - Show online players
+#   op PlayerName                 - Give a player admin privileges
+#   gamemode creative PlayerName  - Change player game mode
+#   difficulty peaceful           - Change world difficulty
+#   whitelist add PlayerName      - Add player to whitelist
+#   ban PlayerName                - Ban a player
+#   say Hello everyone!           - Broadcast a message
+
+# Press Ctrl+C to detach from the console (server keeps running)
+```
 
 ## 📦 What Gets Built
 
