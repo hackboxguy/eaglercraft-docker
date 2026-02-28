@@ -337,7 +337,7 @@ RUN printf '%s\n' \
     'user=eaglercraft' \
     'autostart=true' \
     'autorestart=true' \
-    'startsecs=30' \
+    'startsecs=10' \
     'startretries=5' \
     'stdout_logfile=/opt/eaglercraft/logs/spigot.log' \
     'stderr_logfile=/opt/eaglercraft/logs/spigot.log' \
@@ -411,7 +411,7 @@ RUN printf '%s\n' \
     '' \
     'echo "Starting BungeeCord proxy with EaglerXServer..."' \
     'supervisorctl start bungee' \
-    'sleep 10' \
+    'sleep 15' \
     '' \
     'echo ""' \
     'echo "=== Service Status ==="' \
