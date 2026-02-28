@@ -20,7 +20,7 @@ eliminating the need for BungeeCord proxy and supervisord process management.
 | Backend Server   | PandaSpigot 1.8.8             | Paper 1.12.2                    |
 | Proxy            | BungeeCord + EaglerXServer    | None (EaglerXServer on Paper)   |
 | Process Manager  | Supervisord (2 JVMs)          | None (single JVM)               |
-| WorldEdit        | 6.1.2                         | 6.1.5                           |
+| WorldEdit        | 6.1.2                         | 6.1.2                           |
 | WorldGuard       | 6.1                           | 6.2                             |
 | ViaVersion       | N/A                           | ViaVersion 5.7.1 + ViaBackwards + ViaRewind |
 | Java             | OpenJDK 17                    | OpenJDK 17                      |
@@ -57,8 +57,9 @@ eliminating the need for BungeeCord proxy and supervisord process management.
    Source-only repos contain only build tools, not compiled output.
 5. **Dockerfile heredocs**: `cat > file << 'EOF'` syntax does not work in Dockerfile RUN
    commands (even with BuildKit). Use `printf '%s\n' ... > file` instead.
-6. **WorldEdit fat JAR**: Use `worldedit-bukkit-6.1.x.jar` version 6.1.2+ from Maven.
-   Version 6.1 is adapter-only (156KB); version 6.1.2+ is the full fat JAR (1.6MB+).
+6. **WorldEdit fat JAR**: Only `worldedit-bukkit-6.1.2.jar` from Maven is the full fat JAR
+   (1.6MB+). Versions 6.1 and 6.1.5 are adapter-only JARs (156KB) missing core classes.
+   Always use 6.1.2 — it supports both 1.8.8 and 1.12.2.
 
 ## How to Build & Test
 

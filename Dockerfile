@@ -161,7 +161,7 @@ RUN echo "=== Downloading Paper plugins ===" && \
     "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsXSpawn-2.19.7.jar" && \
     echo "EssentialsXSpawn downloaded: $(ls -lh $EAGLER_HOME/server/plugins/EssentialsXSpawn.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/WorldEdit.jar \
-    "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1.5/worldedit-bukkit-6.1.5.jar" && \
+    "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1.2/worldedit-bukkit-6.1.2.jar" && \
     echo "WorldEdit downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldEdit.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/WorldGuard.jar \
     "https://maven.enginehub.org/repo/com/sk89q/worldguard/worldguard-legacy/6.2/worldguard-legacy-6.2.jar" && \
