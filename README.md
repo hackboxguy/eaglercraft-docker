@@ -18,50 +18,85 @@ A complete Docker build framework for creating self-contained EaglercraftX 1.8.8
 
 ## Prerequisites
 
-- Docker with BuildKit support (install `docker-buildx` if needed)
-- Docker Compose
-- Git (to clone this repository)
-- 4GB+ RAM available
-- Port 8081 available
+- 4GB+ free RAM (2GB for running, more during build)
+- Port 8081 available on your machine
+
+### Install Docker (if not already installed)
+
+**Ubuntu / Debian:**
+```bash
+sudo apt-get update
+sudo apt-get install -y docker.io docker-compose docker-buildx git
+sudo usermod -aG docker $USER
+# Log out and back in for the group change to take effect
+```
+
+**Arch Linux:**
+```bash
+sudo pacman -S docker docker-compose docker-buildx git
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+# Log out and back in for the group change to take effect
+```
+
+> **Note:** This README uses `docker compose` (Docker plugin syntax). If you have the older
+> standalone version, use `docker-compose` (with hyphen) instead. Both work the same way.
 
 ## Quick Start
 
-### Step 1: Clone the Repository
+### Step 1: Clone and Build
 
 ```bash
 git clone https://github.com/hackboxguy/eaglercraft-docker.git
 cd eaglercraft-docker
-```
-
-### Step 2: Build the Docker Image
-
-```bash
 docker build -t eaglercraftx-server:local .
 ```
 
-**Build time:** 5-15 minutes depending on your internet connection
+The build downloads and assembles all server components. It takes **5-15 minutes** depending on
+your internet speed. You'll see a lot of output — that's normal. When it's done, you should see:
 
-### Step 3: Deploy with Docker Compose
-
-```bash
-docker-compose up -d
+```
+Successfully tagged eaglercraftx-server:local
 ```
 
-### Step 4: Verify Everything is Running
+> **Build error?** If you see a "legacy builder" error, your Docker needs the BuildKit plugin.
+> Install it with `sudo apt-get install docker-buildx-plugin` (Ubuntu/Debian) or
+> `sudo pacman -S docker-buildx` (Arch), then run the build command again.
+
+### Step 2: Start the Server
 
 ```bash
-docker-compose ps
-docker-compose logs -f eaglercraft
+docker compose up -d
 ```
 
-## How to Connect and Play
+This starts two containers — a quick init container (sets up directories) followed by the
+game server. The server needs about **60-90 seconds** to fully start. Check the progress with:
 
-1. **Open your web browser** (Chrome or Firefox recommended)
-2. **Navigate to:** `http://localhost:8081` (or `http://YOUR_SERVER_IP:8081`)
-3. **Set your username** (no account required - any name works!)
-4. **Choose a skin** (optional)
-5. **Click "Multiplayer"** - the local server should be pre-configured
-6. **Start building!**
+```bash
+docker compose logs -f eaglercraft
+```
+
+Wait until you see this in the logs:
+
+```
+==========================================
+  All services started successfully!
+  Open in browser: http://<IP>:8081
+==========================================
+```
+
+Press `Ctrl+C` to stop following the logs (the server keeps running in the background).
+
+### Step 3: Open Your Browser and Play
+
+1. Open **Chrome or Firefox** and navigate to `http://localhost:8081`
+   (or `http://YOUR_SERVER_IP:8081` from another device on the same network)
+2. You should see the **EaglercraftX title screen** — a Minecraft-style menu
+3. **Enter any username** (no account needed — type whatever you like)
+4. Click **Multiplayer** — the local server is already pre-configured in the list
+5. Click the server and **Join** — you're in!
+
+> **Tip:** To find your server's IP for other devices on your network, run: `hostname -I | awk '{print $1}'`
 
 ## What Gets Built
 
@@ -101,22 +136,22 @@ The container runs two coordinated services:
 docker build -t eaglercraftx-server:local .
 
 # Start server
-docker-compose up -d
+docker compose up -d
 
 # Stop server
-docker-compose down
+docker compose down
 
 # View startup logs
-docker-compose logs -f
+docker compose logs -f
 
 # Restart server
-docker-compose restart
+docker compose restart
 
 # Check status
-docker-compose ps
+docker compose ps
 
 # Rebuild and restart
-docker-compose down && docker build -t eaglercraftx-server:local . && docker-compose up -d
+docker compose down && docker build -t eaglercraftx-server:local . && docker compose up -d
 ```
 
 ### Advanced Monitoring
@@ -182,19 +217,6 @@ eaglercraft-docker/
 
 ## Troubleshooting
 
-### Docker BuildKit Required
-This Dockerfile requires BuildKit. If you get a "legacy builder" error, install buildx:
-```bash
-# Arch Linux
-sudo pacman -S docker-buildx
-
-# Ubuntu/Debian
-sudo apt-get install docker-buildx-plugin
-
-# Or force BuildKit for a single build
-DOCKER_BUILDKIT=1 docker build -t eaglercraftx-server:local .
-```
-
 ### Build Issues
 ```bash
 # If build fails due to network issues
@@ -211,8 +233,8 @@ docker build -t eaglercraftx-server:local .
 ### Server Won't Start
 ```bash
 # Check detailed logs
-docker-compose logs eaglercraft-init
-docker-compose logs eaglercraft
+docker compose logs eaglercraft-init
+docker compose logs eaglercraft
 
 # Check service status
 docker exec eaglercraftx-server supervisorctl status
@@ -289,9 +311,9 @@ This project is for **educational and research purposes only**. It builds upon o
 git pull origin main
 
 # Rebuild with updates
-docker-compose down
+docker compose down
 docker build --no-cache -t eaglercraftx-server:local .
-docker-compose up -d
+docker compose up -d
 
 # Clean old images (optional)
 docker image prune -f
