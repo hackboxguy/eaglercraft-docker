@@ -126,7 +126,7 @@ RUN apt-get update && \
 RUN useradd -u 1000 -m -d $EAGLER_HOME -s /bin/bash $EAGLER_USER && \
     mkdir -p $EAGLER_HOME/spigot && \
     mkdir -p $EAGLER_HOME/bungee/plugins/EaglerWeb/web && \
-    mkdir -p $EAGLER_HOME/bungee/plugins/EaglerXServer && \
+    mkdir -p $EAGLER_HOME/bungee/plugins/EaglercraftXServer && \
     mkdir -p $EAGLER_HOME/worlds && \
     mkdir -p $EAGLER_HOME/logs && \
     mkdir -p $EAGLER_HOME/scripts && \
@@ -157,11 +157,11 @@ RUN echo "=== Downloading BungeeCord ===" && \
 
 # Download EaglerXServer v1.0.8 and EaglerWeb plugins
 RUN echo "=== Downloading EaglerXServer plugins ===" && \
-    curl -fSL -o $EAGLER_HOME/bungee/plugins/EaglerXServer.jar \
+    curl -fSL -o $EAGLER_HOME/bungee/plugins/EaglercraftXServer.jar \
     "https://github.com/lax1dude/eaglerxserver/releases/download/v1.0.8/EaglerXServer.jar" && \
     curl -fSL -o $EAGLER_HOME/bungee/plugins/EaglerWeb.jar \
     "https://github.com/lax1dude/eaglerxserver/releases/download/v1.0.8/EaglerWeb.jar" && \
-    echo "EaglerXServer downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglerXServer.jar | awk '{print $5}')" && \
+    echo "EaglerXServer downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglercraftXServer.jar | awk '{print $5}')" && \
     echo "EaglerWeb downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglerWeb.jar | awk '{print $5}')"
 
 # Copy web client files from builder stage
@@ -270,7 +270,7 @@ RUN printf '%s\n' \
     '    forward_ip: false' \
     '    enable_tls: false' \
     '    require_tls: false' \
-    > $EAGLER_HOME/bungee/plugins/EaglerXServer/listeners.yml
+    > $EAGLER_HOME/bungee/plugins/EaglercraftXServer/listeners.yml
 
 # Configure EaglerXServer settings.yml
 RUN printf '%s\n' \
@@ -287,7 +287,7 @@ RUN printf '%s\n' \
     'touch_controls_mode: "auto"' \
     'eagler_players_vanilla_skin: "lax1dude"' \
     'enable_voice_chat: false' \
-    > $EAGLER_HOME/bungee/plugins/EaglerXServer/settings.yml
+    > $EAGLER_HOME/bungee/plugins/EaglercraftXServer/settings.yml
 
 # Configure EaglerWeb settings.json
 RUN printf '%s\n' \
