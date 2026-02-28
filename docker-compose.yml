@@ -6,25 +6,22 @@ services:
       - ./data:/setup-data
     command: |
       sh -c "
-        echo '🔧 Setting up Eaglercraft data directories...'
-        mkdir -p /setup-data/worlds /setup-data/logs
+        echo 'Setting up EaglercraftX data directories...'
+        mkdir -p /setup-data/worlds/world /setup-data/worlds/world_nether /setup-data/worlds/world_the_end /setup-data/logs
         chown -R 1000:1000 /setup-data
         chmod -R 755 /setup-data
-        echo '✅ Directories created and permissions set'
-        echo '📁 Worlds: /setup-data/worlds (owned by 1000:1000)'
-        echo '📁 Logs: /setup-data/logs (owned by 1000:1000)'
+        echo 'Directories created and permissions set'
       "
     user: root
 
   eaglercraft:
-    image: eaglercraft-server:local  # ← Uses locally built image
-    container_name: eaglercraft-server
+    image: eaglercraftx-server:local  # Built via: docker build -t eaglercraftx-server:local .
+    container_name: eaglercraftx-server
     depends_on:
       eaglercraft-init:
         condition: service_completed_successfully
     ports:
-      - "8080:8080"    # Web client port
-      - "25565:25565"  # Game server port
+      - "8081:8081"    # Web client (HTTP) + Game server (WebSocket) - single port
     volumes:
       - ./data/worlds:/opt/eaglercraft/worlds
       - ./data/logs:/opt/eaglercraft/logs
@@ -34,10 +31,10 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 90s
     environment:
       - EAGLERCRAFT_MAX_PLAYERS=20
-      - EAGLERCRAFT_MOTD=Welcome to Eaglercraft Server!
+      - EAGLERCRAFT_MOTD=Welcome to EaglercraftX 1.8.8 Server!
     networks:
       - eaglercraft_network
 
