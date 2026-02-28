@@ -1,78 +1,73 @@
-# Migration Plan: Eaglercraft 1.5.2 -> EaglercraftX 1.8.8
+# Version Plan: Eaglercraft 1.12.2 (v1.12.2 branch)
 
-## Status: COMPLETE
+## Status: IN PROGRESS
 
-Migration successfully tested and deployed on 2026-02-28.
+Adapted from the EaglercraftX 1.8.8 Docker setup on the `main` branch.
 
-## Why Migrate?
+## Why 1.12.2?
 
-The Eaglercraft ecosystem has evolved significantly. EaglercraftX 1.8.8 is now the most
-stable and widely deployed version, with a modernized server plugin (EaglerXServer) that
-unifies and simplifies the old BungeeCord-based setup. This migration brings:
+Eaglercraft 1.12.2 brings a newer Minecraft version with more content (concrete, glazed
+terracotta, parrots, illagers, observer blocks, etc.) while also simplifying the server
+architecture. EaglerXServer v1.0.8 runs directly on Paper 1.12.2 as a standalone plugin,
+eliminating the need for BungeeCord proxy and supervisord process management.
 
-- Minecraft 1.8.8 gameplay (more blocks, better mechanics, PBR shaders)
-- Simplified architecture: 3 services -> 2, two ports -> one
-- Modern Java 17 runtime (from Java 8)
-- Unified EaglerXServer plugin (replaces legacy built-in BungeeCord integration)
-- EaglerWeb plugin serves the web client (replaces Python HTTP server)
-- PandaSpigot 1.8.8 backend (high-performance Paper fork, replaces CraftBukkit)
+## What Changed (vs 1.8.8 on main branch)
 
-## What Changed
+| Component        | 1.8.8 (main)                  | 1.12.2 (this branch)             |
+|------------------|-------------------------------|----------------------------------|
+| Minecraft        | 1.8.8                         | 1.12.2                           |
+| Web Client       | EaglercraftX 1.8              | Eaglercraft 1.12.2              |
+| Backend Server   | PandaSpigot 1.8.8             | Paper 1.12.2                    |
+| Proxy            | BungeeCord + EaglerXServer    | None (EaglerXServer on Paper)   |
+| Process Manager  | Supervisord (2 JVMs)          | None (single JVM)               |
+| WorldEdit        | 6.1.2                         | 6.1.5                           |
+| WorldGuard       | 6.1                           | 6.2                             |
+| ViaVersion       | N/A                           | ViaVersion 5.7.1 + ViaBackwards + ViaRewind |
+| Java             | OpenJDK 17                    | OpenJDK 17                      |
+| Docker Image     | eaglercraftx-server:local     | eaglercraft-1.12.2-server:local |
 
-| Component        | Before (1.5.2)              | After (1.8.8)                     |
-|------------------|-----------------------------|-----------------------------------|
-| Minecraft        | 1.5.2                       | 1.8.8                             |
-| Web Client       | Eaglercraft 1.5.2           | EaglercraftX 1.8.8               |
-| Backend Server   | CraftBukkit 1.5.2-R1.0      | PandaSpigot 1.8.8                |
-| Proxy            | BungeeCord (bundled)         | BungeeCord + EaglerXServer plugin |
-| Web Server       | Python 3 http.server         | EaglerWeb plugin (on BungeeCord)  |
-| Java             | OpenJDK 8                    | OpenJDK 17                       |
-| Base Image       | Ubuntu 20.04                 | Ubuntu 22.04                     |
-| Exposed Ports    | 8080 (web) + 25565 (game)    | 8081 (both web + game)           |
-| Services         | 3 (Bukkit, BungeeCord, Python)| 2 (PandaSpigot, BungeeCord)      |
+## Key Simplifications
 
-## Breaking Changes
-
-1. **Port change**: Web client URL changes from `http://host:8080` to `http://host:8081`
-2. **World data**: 1.5.2 worlds are NOT compatible with 1.8.8 - fresh worlds will be generated
-3. **Docker image name**: Changes from `eaglercraft-server:local` to `eaglercraftx-server:local`
-4. **Game connection**: Players no longer need to manually enter a server address -
-   the server address can be pre-configured in the web client
+1. **No BungeeCord** — EaglerXServer runs directly on Paper
+2. **No supervisord** — Single `java -jar Paper.jar` process
+3. **No startup sequencing** — No need to wait for backend then start proxy
+4. **No dual JVM memory tuning** — Single JVM gets all the RAM
+5. **Simpler config** — No BungeeCord config.yml, no spigot.yml bungeecord=true
 
 ## Migration Steps
 
-- [x] Research latest component versions and download URLs
-- [x] Create CLAUDE.md project conventions
-- [x] Create PLAN.md (this file)
-- [x] Rewrite Dockerfile for EaglercraftX 1.8.8 stack
-- [x] Update docker-compose.yml (new port, image name)
+- [x] Research 1.12.2 component versions and download URLs
+- [x] Rewrite Dockerfile for Paper 1.12.2 standalone architecture
+- [x] Update docker-compose.yml (new image name)
 - [x] Update README.md (new architecture, instructions)
-- [x] Build and test the new Docker image
-- [x] Verify web client loads in browser
-- [x] Verify game connection works end-to-end
+- [x] Update PLAN.md (this file)
+- [ ] Build and test the new Docker image
+- [ ] Verify web client loads in browser
+- [ ] Verify game connection works end-to-end
 
-## Lessons Learned During Migration
+## Lessons Learned (carried from 1.8.8)
 
 1. **Plugin directory naming**: EaglerXServer's data directory is `EaglercraftXServer/`
    (full name), not `EaglerXServer/`. Config files placed in the wrong directory are ignored.
-2. **PandaSpigot paperclip**: The paperclip JAR patches itself on first run and exits.
+2. **Paper paperclip**: The paperclip JAR patches itself on first run and exits.
    Must run `--initSettings` during Docker build to avoid repeated restarts at runtime.
 3. **User UID matching**: The container user must have UID 1000 to match the init
    container's `chown 1000:1000` on volume directories, otherwise permission denied errors.
 4. **Web client repos**: Must use repos with PRE-BUILT client files (classes.js, assets.epk).
-   Source-only repos (like 3kh0/eaglercraft-1.8) contain only build tools, not compiled output.
+   Source-only repos contain only build tools, not compiled output.
 5. **Dockerfile heredocs**: `cat > file << 'EOF'` syntax does not work in Dockerfile RUN
    commands (even with BuildKit). Use `printf '%s\n' ... > file` instead.
+6. **WorldEdit fat JAR**: Use `worldedit-bukkit-6.1.x.jar` version 6.1.2+ from Maven.
+   Version 6.1 is adapter-only (156KB); version 6.1.2+ is the full fat JAR (1.6MB+).
 
 ## How to Build & Test
 
 ```bash
-# Clean up old setup
-docker compose down
-rm -rf data/worlds/*    # Old 1.5.2 worlds won't work
+# Switch to this branch
+git checkout v1.12.2
 
 # Build new image
-docker build -t eaglercraftx-server:local .
+docker build -t eaglercraft-1.12.2-server:local .
 
 # Start
 docker compose up -d

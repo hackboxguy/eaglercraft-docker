@@ -6,7 +6,7 @@ services:
       - ./data:/setup-data
     command: |
       sh -c "
-        echo 'Setting up EaglercraftX data directories...'
+        echo 'Setting up Eaglercraft 1.12.2 data directories...'
         mkdir -p /setup-data/worlds/world /setup-data/worlds/world_nether /setup-data/worlds/world_the_end /setup-data/logs
         chown -R 1000:1000 /setup-data
         chmod -R 755 /setup-data
@@ -15,8 +15,8 @@ services:
     user: root
 
   eaglercraft:
-    image: eaglercraftx-server:local  # Built via: docker build -t eaglercraftx-server:local .
-    container_name: eaglercraftx-server
+    image: eaglercraft-1.12.2-server:local  # Built via: docker build -t eaglercraft-1.12.2-server:local .
+    container_name: eaglercraft-1.12.2-server
     depends_on:
       eaglercraft-init:
         condition: service_completed_successfully
