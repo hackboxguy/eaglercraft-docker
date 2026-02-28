@@ -164,7 +164,7 @@ RUN echo "=== Downloading Paper plugins ===" && \
     "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1.2/worldedit-bukkit-6.1.2.jar" && \
     echo "WorldEdit downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldEdit.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/WorldGuard.jar \
-    "https://maven.enginehub.org/repo/com/sk89q/worldguard/worldguard-legacy/6.2/worldguard-legacy-6.2.jar" && \
+    "https://maven.enginehub.org/repo/com/sk89q/worldguard/worldguard-legacy/6.1/worldguard-legacy-6.1.jar" && \
     echo "WorldGuard downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldGuard.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/ViaVersion.jar \
     "https://hangarcdn.papermc.io/plugins/ViaVersion/ViaVersion/versions/5.7.1/PAPER/ViaVersion-5.7.1.jar" && \
@@ -198,13 +198,13 @@ RUN printf '%s\n' \
 # Accept EULA
 RUN echo "eula=true" > $EAGLER_HOME/server/eula.txt
 
-# Configure EaglerXServer listeners.yml (inject into Paper's port 8081)
+# Configure EaglerXServer listener.yml (singular — plugin uses listener.yml not listeners.yml)
 RUN printf '%s\n' \
     'listener_list:' \
     '  - listener_name: "default"' \
     '    inject_address: "0.0.0.0:8081"' \
     '    max_players: 20' \
-    '    server_icon: "server-icon.png"' \
+    '    server_icon: null' \
     '    server_motd:' \
     '      - "Eaglercraft 1.12.2 Server"' \
     '    allow_motd: true' \
@@ -212,7 +212,7 @@ RUN printf '%s\n' \
     '    forward_ip: false' \
     '    enable_tls: false' \
     '    require_tls: false' \
-    > $EAGLER_HOME/server/plugins/EaglercraftXServer/listeners.yml
+    > $EAGLER_HOME/server/plugins/EaglercraftXServer/listener.yml
 
 # Configure EaglerXServer settings.yml
 RUN printf '%s\n' \
