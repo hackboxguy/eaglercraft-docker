@@ -9,36 +9,19 @@ FROM ubuntu:22.04 AS builder
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    git \
-    wget \
     curl \
-    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
 
-# Download pre-built Eaglercraft 1.12.2 web client files with fallback sources
+# Download official Eaglercraft 1.12.2 web client from eaglercraft.dev (by PeytonPlayz585/lax1dude)
+# Note: XxFluffyAsherxX/Eaglercraft-1.12.2 repo has mismatched files (classes.js expects
+# plugin_version.json in EPK but it's missing). The official eaglercraft.dev build works correctly.
 RUN echo "=== Downloading Eaglercraft 1.12.2 web client ===" && \
     mkdir -p /build/web && \
-    ( \
-        echo "Trying source 1 (XxFluffyAsherxX/Eaglercraft-1.12.2)..." && \
-        git clone --depth 1 https://github.com/XxFluffyAsherxX/Eaglercraft-1.12.2.git eaglercraft-source && \
-        cp eaglercraft-source/Web/classes.js eaglercraft-source/Web/assets.epk /build/web/ && \
-        [ -f eaglercraft-source/Web/index.html ] && cp eaglercraft-source/Web/index.html /build/web/ || true && \
-        [ -f eaglercraft-source/Web/favicon.png ] && cp eaglercraft-source/Web/favicon.png /build/web/ || true && \
-        [ -d eaglercraft-source/Web/lang ] && cp -r eaglercraft-source/Web/lang /build/web/ || true && \
-        echo "Clone successful" \
-    ) || ( \
-        echo "Trying source 2 (direct download from eaglercraft.dev)..." && \
-        rm -rf eaglercraft-source && \
-        curl -fSL -o /build/web/classes.js "https://eaglercraft.dev/clients/Release%201.12.2%20JS/classes.js" && \
-        curl -fSL -o /build/web/assets.epk "https://eaglercraft.dev/clients/Release%201.12.2%20JS/assets.epk" && \
-        echo "Direct download successful" \
-    ) || ( \
-        echo "All sources failed!" && \
-        exit 1 \
-    ) && \
-    rm -rf eaglercraft-source && \
+    curl -fSL -o /build/web/classes.js "https://eaglercraft.dev/clients/Release%201.12.2%20JS/classes.js" && \
+    curl -fSL -o /build/web/assets.epk "https://eaglercraft.dev/clients/Release%201.12.2%20JS/assets.epk" && \
+    curl -fSL -o /build/web/favicon.png "https://eaglercraft.dev/clients/Release%201.12.2%20JS/favicon.png" && \
     echo "=== Web client files ===" && \
     ls -la /build/web/ && \
     echo "=== Validating required files ===" && \
@@ -46,47 +29,43 @@ RUN echo "=== Downloading Eaglercraft 1.12.2 web client ===" && \
     [ -f "/build/web/assets.epk" ] || { echo "ERROR: assets.epk missing!"; exit 1; } && \
     echo "Validation passed: classes.js and assets.epk found"
 
-# Create default index.html if not present in the source repo
-RUN if [ ! -f "/build/web/index.html" ]; then \
-        echo "Creating default index.html..." && \
-        printf '%s\n' \
-            '<!DOCTYPE html>' \
-            '<html>' \
-            '<head>' \
-            '<meta charset="UTF-8">' \
-            '<meta name="viewport" content="width=device-width, initial-scale=1.0">' \
-            '<title>Eaglercraft 1.12.2</title>' \
-            '<style>' \
-            'html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; }' \
-            '</style>' \
-            '</head>' \
-            '<body>' \
-            '<script type="text/javascript">' \
-            '"use strict";' \
-            'window.eaglercraftXOpts = {' \
-            '    container: "game_frame",' \
-            '    assetsURI: "assets.epk",' \
-            '    localesURI: "lang",' \
-            '    worldsDB: "worlds",' \
-            '    servers: [' \
-            '        { addr: window.location.hostname + ":8081", name: "Local Server", hideAddr: true }' \
-            '    ],' \
-            '    checkShaderGLErrors: false,' \
-            '    enableDownloadOfflineButton: false,' \
-            '    downloadOfflineButtonLink: null,' \
-            '    html5CursorSupport: false,' \
-            '    allowServerRedirects: false,' \
-            '    enableSignatureBadge: false,' \
-            '    checkRelaysForUpdates: false,' \
-            '    allowVoiceClient: false' \
-            '};' \
-            '</script>' \
-            '<div style="width:100%;height:100%;" id="game_frame"></div>' \
-            '<script type="text/javascript" src="classes.js"></script>' \
-            '</body>' \
-            '</html>' \
-            > /build/web/index.html; \
-    fi && \
+# Create index.html with local server pre-configured (no relays, no public servers)
+RUN printf '%s\n' \
+    '<!DOCTYPE html>' \
+    '<html>' \
+    '<head>' \
+    '<meta charset="UTF-8">' \
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">' \
+    '<title>Eaglercraft 1.12.2</title>' \
+    '<style>' \
+    'html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; }' \
+    '</style>' \
+    '</head>' \
+    '<body>' \
+    '<script type="text/javascript">' \
+    '"use strict";' \
+    'window.eaglercraftXOpts = {' \
+    '    container: "game_frame",' \
+    '    assetsURI: "assets.epk",' \
+    '    worldsDB: "worlds",' \
+    '    servers: [' \
+    '        { addr: window.location.hostname + ":8081", name: "Local Server", hideAddr: true }' \
+    '    ],' \
+    '    checkShaderGLErrors: false,' \
+    '    enableDownloadOfflineButton: false,' \
+    '    downloadOfflineButtonLink: null,' \
+    '    html5CursorSupport: false,' \
+    '    allowServerRedirects: false,' \
+    '    enableSignatureBadge: false,' \
+    '    checkRelaysForUpdates: false,' \
+    '    allowVoiceClient: false' \
+    '};' \
+    '</script>' \
+    '<div style="width:100%;height:100%;" id="game_frame"></div>' \
+    '<script type="text/javascript" src="classes.js"></script>' \
+    '</body>' \
+    '</html>' \
+    > /build/web/index.html && \
     echo "=== Web client preparation complete ==="
 
 # ============================================================
