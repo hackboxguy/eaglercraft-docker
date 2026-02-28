@@ -133,11 +133,20 @@ RUN useradd -r -m -d $EAGLER_HOME -s /bin/bash $EAGLER_USER && \
     mkdir -p /var/log/supervisor && \
     chown -R $EAGLER_USER:$EAGLER_USER $EAGLER_HOME
 
-# Download PandaSpigot 1.8.8
+# Download PandaSpigot 1.8.8 and run paperclip patching during build
+# PandaSpigot uses paperclip which patches itself on first run and exits.
+# We run it during build so it's ready to start immediately at runtime.
 RUN echo "=== Downloading PandaSpigot 1.8.8 ===" && \
     curl -fSL -o $EAGLER_HOME/spigot/PandaSpigot.jar \
     "https://downloads.hpfxd.com/v2/projects/pandaspigot/versions/1.8.8/builds/latest/downloads/paperclip" && \
-    echo "PandaSpigot downloaded: $(ls -lh $EAGLER_HOME/spigot/PandaSpigot.jar | awk '{print $5}')"
+    echo "PandaSpigot downloaded: $(ls -lh $EAGLER_HOME/spigot/PandaSpigot.jar | awk '{print $5}')" && \
+    echo "=== Running paperclip patching ===" && \
+    cd $EAGLER_HOME/spigot && \
+    echo "eula=true" > eula.txt && \
+    java -jar PandaSpigot.jar --initSettings 2>&1 || true && \
+    java -jar PandaSpigot.jar --forceUpgrade 2>&1 || true && \
+    echo "=== Paperclip patching complete ===" && \
+    ls -la $EAGLER_HOME/spigot/
 
 # Download BungeeCord latest
 RUN echo "=== Downloading BungeeCord ===" && \
@@ -327,8 +336,8 @@ RUN printf '%s\n' \
     'user=eaglercraft' \
     'autostart=true' \
     'autorestart=true' \
-    'startsecs=10' \
-    'startretries=3' \
+    'startsecs=30' \
+    'startretries=5' \
     'stdout_logfile=/opt/eaglercraft/logs/spigot.log' \
     'stderr_logfile=/opt/eaglercraft/logs/spigot.log' \
     'stdout_logfile_maxbytes=50MB' \
