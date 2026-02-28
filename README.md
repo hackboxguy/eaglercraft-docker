@@ -1,5 +1,7 @@
 # EaglercraftX 1.8.8 Server - Docker Build Kit
 
+![EaglercraftX Home Server](images/eaglercraft-home-server.png)
+
 A complete Docker build framework for creating self-contained EaglercraftX 1.8.8 servers that run browser-based Minecraft 1.8.8 without requiring accounts or installations. Perfect for educational purposes and offline family gaming!
 
 > **Migrated from Eaglercraft 1.5.2** - See [PLAN.md](PLAN.md) for migration details.
