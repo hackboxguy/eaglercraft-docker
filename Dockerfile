@@ -140,7 +140,10 @@ RUN echo "=== Downloading EaglerXServer plugins ===" && \
     echo "EaglerXServer downloaded: $(ls -lh $EAGLER_HOME/server/plugins/EaglercraftXServer.jar | awk '{print $5}')" && \
     echo "EaglerWeb downloaded: $(ls -lh $EAGLER_HOME/server/plugins/EaglerWeb.jar | awk '{print $5}')"
 
-# Download plugins: analytics, permissions, essentials, world protection, protocol compat
+# Download plugins: analytics, permissions, essentials, world protection
+# Note: ViaVersion/ViaBackwards/ViaRewind removed — they conflict with EaglerXServer's
+# Netty pipeline injection on Bukkit (BukkitChannelInitializer.initChannel NoSuchMethodException)
+# and are unnecessary since Eaglercraft 1.12.2 client natively speaks protocol 340 (MC 1.12.2)
 RUN echo "=== Downloading Paper plugins ===" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/Plan.jar \
     "https://github.com/plan-player-analytics/Plan/releases/download/5.6.2965/Plan-5.6-build-2965.jar" && \
@@ -165,16 +168,7 @@ RUN echo "=== Downloading Paper plugins ===" && \
     echo "WorldEdit downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldEdit.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/WorldGuard.jar \
     "https://maven.enginehub.org/repo/com/sk89q/worldguard/worldguard-legacy/6.1.2/worldguard-legacy-6.1.2.jar" && \
-    echo "WorldGuard downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldGuard.jar | awk '{print $5}')" && \
-    curl -fSL -o $EAGLER_HOME/server/plugins/ViaVersion.jar \
-    "https://hangarcdn.papermc.io/plugins/ViaVersion/ViaVersion/versions/5.7.1/PAPER/ViaVersion-5.7.1.jar" && \
-    echo "ViaVersion downloaded: $(ls -lh $EAGLER_HOME/server/plugins/ViaVersion.jar | awk '{print $5}')" && \
-    curl -fSL -o $EAGLER_HOME/server/plugins/ViaBackwards.jar \
-    "https://hangarcdn.papermc.io/plugins/ViaVersion/ViaBackwards/versions/5.7.1/PAPER/ViaBackwards-5.7.1.jar" && \
-    echo "ViaBackwards downloaded: $(ls -lh $EAGLER_HOME/server/plugins/ViaBackwards.jar | awk '{print $5}')" && \
-    curl -fSL -o $EAGLER_HOME/server/plugins/ViaRewind.jar \
-    "https://hangarcdn.papermc.io/plugins/ViaVersion/ViaRewind/versions/4.0.14/PAPER/ViaRewind-4.0.14.jar" && \
-    echo "ViaRewind downloaded: $(ls -lh $EAGLER_HOME/server/plugins/ViaRewind.jar | awk '{print $5}')"
+    echo "WorldGuard downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldGuard.jar | awk '{print $5}')"
 
 # Copy web client files from builder stage
 COPY --from=builder --chown=$EAGLER_USER:$EAGLER_USER /build/web $EAGLER_HOME/server/plugins/EaglerWeb/web/

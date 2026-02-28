@@ -22,7 +22,7 @@ eliminating the need for BungeeCord proxy and supervisord process management.
 | Process Manager  | Supervisord (2 JVMs)          | None (single JVM)               |
 | WorldEdit        | 6.1.2                         | 6.1.2                           |
 | WorldGuard       | 6.1                           | 6.1.2                           |
-| ViaVersion       | N/A                           | ViaVersion 5.7.1 + ViaBackwards + ViaRewind |
+| ViaVersion       | N/A                           | N/A (conflicts with EaglerXServer Netty injection) |
 | Java             | OpenJDK 17                    | OpenJDK 17                      |
 | Docker Image     | eaglercraftx-server:local     | eaglercraft-1.12.2-server:local |
 
@@ -65,6 +65,10 @@ eliminating the need for BungeeCord proxy and supervisord process management.
    Use `worldguard-legacy-6.1.2.jar` (1.2MB fat JAR with squirrelid bundled).
 8. **EaglerXServer config filenames**: The Bukkit/Paper plugin uses `listener.yml`
    (singular), not `listeners.yml`. Wrong filename is silently ignored.
+9. **ViaVersion incompatible with EaglerXServer on Bukkit**: ViaVersion replaces Paper's
+   ChannelInitializer with BukkitChannelInitializer, which breaks EaglerXServer's Netty
+   injection (NoSuchMethodException on initChannel). Since the Eaglercraft 1.12.2 client
+   natively speaks protocol 340, ViaVersion is unnecessary anyway.
 
 ## How to Build & Test
 

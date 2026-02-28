@@ -162,9 +162,6 @@ The build process creates a container with:
 | **EssentialsX** | Homes, warps, teleport, kits, economy, chat formatting |
 | **WorldEdit** | Mass block editing tool for admins |
 | **WorldGuard** | Region protection to prevent griefing |
-| **ViaVersion** | Protocol version translation for client compatibility |
-| **ViaBackwards** | Allow older protocol clients to connect |
-| **ViaRewind** | Legacy client protocol support |
 
 ## 🏗️ Architecture
 
@@ -351,7 +348,6 @@ This Docker build framework utilizes:
 - **[Eaglercraft 1.12.2](https://eaglercraft.com/)** - Browser-based Minecraft 1.12.2 port
 - **[EaglerXServer](https://github.com/lax1dude/eaglerxserver)** - Unified Eaglercraft server plugin
 - **[Paper 1.12.2](https://papermc.io/)** - High-performance Minecraft server
-- **[ViaVersion](https://viaversion.com/)** - Protocol version translation
 
 ## ⚖️ Legal Notice
 
