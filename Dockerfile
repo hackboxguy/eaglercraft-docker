@@ -17,40 +17,41 @@ RUN apt-get update && \
 
 WORKDIR /build
 
-# Download EaglercraftX 1.8 web client files with fallback sources
+# Download pre-built EaglercraftX 1.8 web client files with fallback sources
+# These repos contain compiled client files (classes.js, assets.epk, etc.)
 RUN echo "=== Downloading EaglercraftX 1.8 web client ===" && \
+    mkdir -p /build/web && \
     ( \
-        echo "Trying primary source (3kh0)..." && \
-        git clone --depth 1 https://github.com/3kh0/eaglercraft-1.8.git eaglercraft-source && \
+        echo "Trying source 1 (catfoolyou/EaglerX-Client)..." && \
+        git clone --depth 1 https://github.com/catfoolyou/EaglerX-Client.git eaglercraft-source && \
+        cp eaglercraft-source/classes.js eaglercraft-source/assets.epk /build/web/ && \
+        [ -f eaglercraft-source/index.html ] && cp eaglercraft-source/index.html /build/web/ || true && \
+        [ -f eaglercraft-source/favicon.png ] && cp eaglercraft-source/favicon.png /build/web/ || true && \
+        [ -d eaglercraft-source/lang ] && cp -r eaglercraft-source/lang /build/web/ || true && \
         echo "Clone successful" \
     ) || ( \
-        echo "Trying fallback source (eaglerarchive)..." && \
+        echo "Trying source 2 (KithrakWasTaken/EaglercraftX-Client)..." && \
         rm -rf eaglercraft-source && \
-        git clone --depth 1 https://github.com/eaglerarchive/eaglercraftx-1.8.git eaglercraft-source && \
+        git clone --depth 1 https://github.com/KithrakWasTaken/EaglercraftX-Client.git eaglercraft-source && \
+        cp eaglercraft-source/classes.js eaglercraft-source/assets.epk /build/web/ && \
+        [ -f eaglercraft-source/index.html ] && cp eaglercraft-source/index.html /build/web/ || true && \
+        [ -f eaglercraft-source/favicon.png ] && cp eaglercraft-source/favicon.png /build/web/ || true && \
+        [ -d eaglercraft-source/lang ] && cp -r eaglercraft-source/lang /build/web/ || true && \
         echo "Clone successful" \
     ) || ( \
-        echo "Trying fallback source (AstralMC)..." && \
+        echo "Trying source 3 (absoluteG492/EaglercraftX-Client)..." && \
         rm -rf eaglercraft-source && \
-        git clone --depth 1 https://github.com/AstralMC/EaglercraftX-1.8.git eaglercraft-source && \
+        git clone --depth 1 https://github.com/absoluteG492/EaglercraftX-Client.git eaglercraft-source && \
+        cp eaglercraft-source/classes.js eaglercraft-source/assets.epk /build/web/ && \
+        [ -f eaglercraft-source/index.html ] && cp eaglercraft-source/index.html /build/web/ || true && \
+        [ -f eaglercraft-source/favicon.png ] && cp eaglercraft-source/favicon.png /build/web/ || true && \
+        [ -d eaglercraft-source/lang ] && cp -r eaglercraft-source/lang /build/web/ || true && \
         echo "Clone successful" \
     ) || ( \
         echo "All git sources failed!" && \
         exit 1 \
-    )
-
-# Locate and extract web client files
-RUN echo "=== Locating web client files ===" && \
-    mkdir -p /build/web && \
-    CLASSES_JS=$(find /build/eaglercraft-source -name "classes.js" -type f | head -1) && \
-    if [ -z "$CLASSES_JS" ]; then \
-        echo "ERROR: classes.js not found in repository!"; \
-        echo "Repository contents:"; \
-        find /build/eaglercraft-source -maxdepth 3 -type f | head -50; \
-        exit 1; \
-    fi && \
-    WEB_DIR=$(dirname "$CLASSES_JS") && \
-    echo "Found web client files in: $WEB_DIR" && \
-    cp -r "$WEB_DIR"/* /build/web/ && \
+    ) && \
+    rm -rf eaglercraft-source && \
     echo "=== Web client files ===" && \
     ls -la /build/web/ && \
     echo "=== Validating required files ===" && \
