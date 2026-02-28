@@ -130,6 +130,16 @@ docker exec -it eaglercraftx-server supervisorctl fg spigot
 #   whitelist add PlayerName      - Add player to whitelist
 #   ban PlayerName                - Ban a player
 #   say Hello everyone!           - Broadcast a message
+#
+# EssentialsX commands (players can use these in-game chat):
+#   /sethome, /home               - Set and teleport to home
+#   /tpa PlayerName               - Request teleport to another player
+#   /spawn                        - Teleport to spawn
+#   /warp, /setwarp               - Teleport to/create warps (admin)
+#
+# LuckPerms (permissions):
+#   lp user PlayerName group set admin  - Make player an admin
+#   lp group default permission set essentials.home true  - Allow /home for all
 
 # Press Ctrl+C to detach from the console (server keeps running)
 ```
@@ -144,9 +154,19 @@ The build process creates a container with:
 - **EaglerXServer v1.0.8** - Eaglercraft WebSocket protocol plugin
 - **EaglerWeb** - Serves the web client via HTTP on the same port
 - **EaglercraftX 1.8 web client** - Browser-based game client
-- **Plan Player Analytics** - Web dashboard for server/player stats (port 8082)
-- **EaglerXPlan** - Eaglercraft-specific analytics addon by lax1dude
 - **Supervisord** for process management
+
+### Included Plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| **Plan Player Analytics** | Web dashboard for server/player stats (port 8082) |
+| **EaglerXPlan** | Eaglercraft-specific analytics (client version, browser info) |
+| **Vault** | Economy and permissions API bridge |
+| **LuckPerms** | Permissions management (groups, roles) |
+| **EssentialsX** | Homes, warps, teleport, kits, economy, chat formatting |
+| **WorldEdit** | Mass block editing tool for admins |
+| **WorldGuard** | Region protection to prevent griefing |
 
 ## 🏗️ Architecture
 

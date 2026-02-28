@@ -164,14 +164,35 @@ RUN echo "=== Downloading EaglerXServer plugins ===" && \
     echo "EaglerXServer downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglercraftXServer.jar | awk '{print $5}')" && \
     echo "EaglerWeb downloaded: $(ls -lh $EAGLER_HOME/bungee/plugins/EaglerWeb.jar | awk '{print $5}')"
 
-# Download Plan Player Analytics and EaglerXPlan plugins (for PandaSpigot)
-RUN echo "=== Downloading Plan Player Analytics ===" && \
+# Download PandaSpigot plugins: analytics, permissions, essentials, world protection
+RUN echo "=== Downloading PandaSpigot plugins ===" && \
     curl -fSL -o $EAGLER_HOME/spigot/plugins/Plan.jar \
     "https://github.com/plan-player-analytics/Plan/releases/download/5.6.2965/Plan-5.6-build-2965.jar" && \
     echo "Plan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/Plan.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar \
     "https://cdn.modrinth.com/data/c5O9eM9C/versions/L2m8XjSl/EaglerXPlan.jar" && \
-    echo "EaglerXPlan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar | awk '{print $5}')"
+    echo "EaglerXPlan downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EaglerXPlan.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/Vault.jar \
+    "https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar" && \
+    echo "Vault downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/Vault.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/LuckPerms.jar \
+    "https://download.luckperms.net/1624/bukkit/loader/LuckPerms-Bukkit-5.5.36.jar" && \
+    echo "LuckPerms downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/LuckPerms.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/EssentialsX.jar \
+    "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsX-2.19.7.jar" && \
+    echo "EssentialsX downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EssentialsX.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/EssentialsXChat.jar \
+    "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsXChat-2.19.7.jar" && \
+    echo "EssentialsXChat downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EssentialsXChat.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/EssentialsXSpawn.jar \
+    "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsXSpawn-2.19.7.jar" && \
+    echo "EssentialsXSpawn downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/EssentialsXSpawn.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/WorldEdit.jar \
+    "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1/worldedit-bukkit-6.1.jar" && \
+    echo "WorldEdit downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/WorldEdit.jar | awk '{print $5}')" && \
+    curl -fSL -o $EAGLER_HOME/spigot/plugins/WorldGuard.jar \
+    "https://maven.enginehub.org/repo/com/sk89q/worldguard/6.1/worldguard-6.1.jar" && \
+    echo "WorldGuard downloaded: $(ls -lh $EAGLER_HOME/spigot/plugins/WorldGuard.jar | awk '{print $5}')"
 
 # Copy web client files from builder stage
 COPY --from=builder --chown=$EAGLER_USER:$EAGLER_USER /build/web $EAGLER_HOME/bungee/plugins/EaglerWeb/web/
