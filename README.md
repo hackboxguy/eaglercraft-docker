@@ -4,19 +4,19 @@ A complete Docker build framework for creating self-contained EaglercraftX 1.8.8
 
 > **Migrated from Eaglercraft 1.5.2** - See [PLAN.md](PLAN.md) for migration details.
 
-## Features
+## ✨ Features
 
-- **Browser-based Minecraft 1.8.8** - No client installation required
-- **No accounts needed** - Educational environment with any username
-- **Completely offline** - No internet dependency after setup
-- **Single port** - Web client and game server on one port (8081)
-- **Containerized solution** - Everything packaged in Docker
-- **Automatic persistence** - Worlds and logs saved locally in `./data/`
-- **Zero configuration** - Works out of the box after building
-- **Health monitoring** - Built-in health checks and status reporting
-- **Modern stack** - Java 17, PandaSpigot 1.8.8, EaglerXServer
+- 🎮 **Browser-based Minecraft 1.8.8** - No client installation required
+- 🚫 **No accounts needed** - Educational environment with any username
+- 🔒 **Completely offline** - No internet dependency after setup
+- 🔌 **Single port** - Web client and game server on one port (8081)
+- 📦 **Containerized solution** - Everything packaged in Docker
+- 💾 **Automatic persistence** - Worlds and logs saved locally in `./data/`
+- 🔧 **Zero configuration** - Works out of the box after building
+- 🏥 **Health monitoring** - Built-in health checks and status reporting
+- ⚡ **Modern stack** - Java 17, PandaSpigot 1.8.8, EaglerXServer
 
-## Prerequisites
+## 📋 Prerequisites
 
 - 4GB+ free RAM (2GB for running, more during build)
 - Port 8081 available on your machine
@@ -42,7 +42,7 @@ sudo usermod -aG docker $USER
 > **Note:** This README uses `docker compose` (Docker plugin syntax). If you have the older
 > standalone version, use `docker-compose` (with hyphen) instead. Both work the same way.
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Step 1: Clone and Build
 
@@ -98,7 +98,7 @@ Press `Ctrl+C` to stop following the logs (the server keeps running in the backg
 
 > **Tip:** To find your server's IP for other devices on your network, run: `hostname -I | awk '{print $1}'`
 
-## What Gets Built
+## 📦 What Gets Built
 
 The build process creates a container with:
 - **Ubuntu 22.04** base system
@@ -110,7 +110,7 @@ The build process creates a container with:
 - **EaglercraftX 1.8 web client** - Browser-based game client
 - **Supervisord** for process management
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 Browser (port 8081)
@@ -128,7 +128,7 @@ The container runs two coordinated services:
 - **PandaSpigot 1.8.8** (port 25565 internal) - Minecraft 1.8.8 game server
 - **BungeeCord** (port 8081 external) - Serves web client AND handles WebSocket game connections
 
-## Management Commands
+## 🔧 Management Commands
 
 ### Basic Operations
 ```bash
@@ -183,7 +183,7 @@ tar -xzf eaglercraft-backup-20260228.tar.gz
 ls -la data/worlds/world/
 ```
 
-## Network Setup
+## 🌐 Network Setup
 
 ### For Local Gaming (Same Network)
 - **Web Client + Game:** `http://192.168.1.XXX:8081`
@@ -197,7 +197,7 @@ sudo ufw allow 8081/tcp
 sudo ufw allow from 192.168.1.0/24 to any port 8081
 ```
 
-## Repository Structure
+## 📁 Repository Structure
 
 ```
 eaglercraft-docker/
@@ -215,7 +215,7 @@ eaglercraft-docker/
     └── logs/               # Server logs and diagnostics
 ```
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
 ### Build Issues
 ```bash
@@ -274,7 +274,7 @@ services:
           memory: 1G
 ```
 
-## System Requirements
+## 🔧 System Requirements
 
 ### For Building:
 - **CPU:** 2+ cores recommended
@@ -288,7 +288,7 @@ services:
 - **Storage:** 2GB+ for built image, additional space for worlds
 - **Network:** Port 8081 accessible
 
-## Credits
+## 📜 Credits
 
 This Docker build framework utilizes:
 - **[EaglercraftX 1.8](https://eaglercraft.com/)** by lax1dude - Browser-based Minecraft 1.8.8 port
@@ -296,7 +296,7 @@ This Docker build framework utilizes:
 - **[PandaSpigot](https://github.com/hpfxd/PandaSpigot)** - High-performance Paper fork for 1.8.8
 - **[BungeeCord](https://www.spigotmc.org/wiki/bungeecord/)** - Minecraft proxy server
 
-## Legal Notice
+## ⚖️ Legal Notice
 
 This project is for **educational and research purposes only**. It builds upon open-source Eaglercraft implementations. Users are responsible for:
 - Ensuring compliance with applicable laws
@@ -304,7 +304,7 @@ This project is for **educational and research purposes only**. It builds upon o
 - Using only for educational/research purposes
 - Not distributing built images commercially
 
-## Updates and Maintenance
+## 🔄 Updates and Maintenance
 
 ```bash
 # Update to latest version
@@ -330,4 +330,4 @@ If you previously ran the 1.5.2 version of this project:
 
 ---
 
-**Happy Building! Enjoy Minecraft 1.8.8 in your browser!**
+**🎮 Happy Building! Enjoy Minecraft 1.8.8 in your browser! ⛏️🐳**
