@@ -68,16 +68,16 @@ unifies and simplifies the old BungeeCord-based setup. This migration brings:
 
 ```bash
 # Clean up old setup
-docker-compose down
+docker compose down
 rm -rf data/worlds/*    # Old 1.5.2 worlds won't work
 
 # Build new image
 docker build -t eaglercraftx-server:local .
 
 # Start
-docker-compose up -d
+docker compose up -d
 
 # Test
-docker-compose logs -f eaglercraft     # Watch startup
+docker compose logs -f eaglercraft     # Watch startup
 # Open http://localhost:8081 in browser
 ```

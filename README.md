@@ -197,6 +197,14 @@ sudo ufw allow 8081/tcp
 sudo ufw allow from 192.168.1.0/24 to any port 8081
 ```
 
+## 🛡️ Safety Defaults (Recommended for Families)
+
+- Keep this server on your **private home LAN** only
+- **Do not expose** port 8081 directly to the public internet
+- Anyone with LAN access to the server can join with any username — there is no authentication
+- If remote access is needed, use a **VPN** instead of opening firewall ports
+- Back up your worlds regularly (see Data Management above)
+
 ## 📁 Repository Structure
 
 ```

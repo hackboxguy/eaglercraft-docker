@@ -1,7 +1,7 @@
 services:
   # Init container to set up directories and permissions automatically
   eaglercraft-init:
-    image: alpine:latest
+    image: alpine:3.19
     volumes:
       - ./data:/setup-data
     command: |
@@ -32,9 +32,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 90s
-    environment:
-      - EAGLERCRAFT_MAX_PLAYERS=20
-      - EAGLERCRAFT_MOTD=Welcome to EaglercraftX 1.8.8 Server!
     networks:
       - eaglercraft_network
 
