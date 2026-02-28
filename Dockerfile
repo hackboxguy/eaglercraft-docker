@@ -122,8 +122,8 @@ RUN apt-get update && \
     net-tools \
     && rm -rf /var/lib/apt/lists/*
 
-# Create eaglercraft user and directory structure
-RUN useradd -r -m -d $EAGLER_HOME -s /bin/bash $EAGLER_USER && \
+# Create eaglercraft user with UID 1000 (must match init container's chown 1000:1000)
+RUN useradd -u 1000 -m -d $EAGLER_HOME -s /bin/bash $EAGLER_USER && \
     mkdir -p $EAGLER_HOME/spigot && \
     mkdir -p $EAGLER_HOME/bungee/plugins/EaglerWeb/web && \
     mkdir -p $EAGLER_HOME/bungee/plugins/EaglerXServer && \
@@ -144,7 +144,8 @@ RUN echo "=== Downloading PandaSpigot 1.8.8 ===" && \
     cd $EAGLER_HOME/spigot && \
     echo "eula=true" > eula.txt && \
     java -jar PandaSpigot.jar --initSettings 2>&1 || true && \
-    java -jar PandaSpigot.jar --forceUpgrade 2>&1 || true && \
+    rm -rf world world_nether world_the_end crash-reports logs && \
+    rm -f session.lock && \
     echo "=== Paperclip patching complete ===" && \
     ls -la $EAGLER_HOME/spigot/
 
@@ -375,6 +376,11 @@ RUN printf '%s\n' \
     'mkdir -p /opt/eaglercraft/worlds/world' \
     'mkdir -p /opt/eaglercraft/worlds/world_nether' \
     'mkdir -p /opt/eaglercraft/worlds/world_the_end' \
+    'chown -R eaglercraft:eaglercraft /opt/eaglercraft/worlds' \
+    'chown -R eaglercraft:eaglercraft /opt/eaglercraft/logs' \
+    'rm -f /opt/eaglercraft/worlds/world/session.lock' \
+    'rm -f /opt/eaglercraft/worlds/world_nether/session.lock' \
+    'rm -f /opt/eaglercraft/worlds/world_the_end/session.lock' \
     '' \
     'supervisord -c /etc/supervisor/supervisord.conf &' \
     'SUPERVISOR_PID=$!' \
