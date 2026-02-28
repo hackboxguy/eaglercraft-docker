@@ -164,7 +164,7 @@ RUN echo "=== Downloading Paper plugins ===" && \
     "https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-bukkit/6.1.2/worldedit-bukkit-6.1.2.jar" && \
     echo "WorldEdit downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldEdit.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/WorldGuard.jar \
-    "https://maven.enginehub.org/repo/com/sk89q/worldguard/worldguard-legacy/6.1/worldguard-legacy-6.1.jar" && \
+    "https://maven.enginehub.org/repo/com/sk89q/worldguard/worldguard-legacy/6.1.2/worldguard-legacy-6.1.2.jar" && \
     echo "WorldGuard downloaded: $(ls -lh $EAGLER_HOME/server/plugins/WorldGuard.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/ViaVersion.jar \
     "https://hangarcdn.papermc.io/plugins/ViaVersion/ViaVersion/versions/5.7.1/PAPER/ViaVersion-5.7.1.jar" && \

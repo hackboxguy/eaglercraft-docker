@@ -21,7 +21,7 @@ eliminating the need for BungeeCord proxy and supervisord process management.
 | Proxy            | BungeeCord + EaglerXServer    | None (EaglerXServer on Paper)   |
 | Process Manager  | Supervisord (2 JVMs)          | None (single JVM)               |
 | WorldEdit        | 6.1.2                         | 6.1.2                           |
-| WorldGuard       | 6.1                           | 6.1                             |
+| WorldGuard       | 6.1                           | 6.1.2                           |
 | ViaVersion       | N/A                           | ViaVersion 5.7.1 + ViaBackwards + ViaRewind |
 | Java             | OpenJDK 17                    | OpenJDK 17                      |
 | Docker Image     | eaglercraftx-server:local     | eaglercraft-1.12.2-server:local |
@@ -61,8 +61,8 @@ eliminating the need for BungeeCord proxy and supervisord process management.
    (1.6MB+). Versions 6.1 and 6.1.5 are adapter-only JARs (156KB) missing core classes.
    Always use 6.1.2 — it supports both 1.8.8 and 1.12.2.
 7. **WorldGuard fat JAR**: `worldguard-legacy-6.2.jar` from Maven is missing bundled
-   dependencies (squirrelid library). Use `worldguard-legacy-6.1.jar` which works on
-   both 1.8.8 and 1.12.2.
+   dependencies (squirrelid library). Version 6.1 doesn't exist on Maven.
+   Use `worldguard-legacy-6.1.2.jar` (1.2MB fat JAR with squirrelid bundled).
 8. **EaglerXServer config filenames**: The Bukkit/Paper plugin uses `listener.yml`
    (singular), not `listeners.yml`. Wrong filename is silently ignored.
 
