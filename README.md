@@ -18,7 +18,8 @@ A complete Docker build framework for creating self-contained EaglercraftX 1.8.8
 
 ## Prerequisites
 
-- Docker and Docker Compose installed
+- Docker with BuildKit support (install `docker-buildx` if needed)
+- Docker Compose
 - Git (to clone this repository)
 - 4GB+ RAM available
 - Port 8081 available
@@ -181,6 +182,19 @@ eaglercraft-docker/
 
 ## Troubleshooting
 
+### Docker BuildKit Required
+This Dockerfile requires BuildKit. If you get a "legacy builder" error, install buildx:
+```bash
+# Arch Linux
+sudo pacman -S docker-buildx
+
+# Ubuntu/Debian
+sudo apt-get install docker-buildx-plugin
+
+# Or force BuildKit for a single build
+DOCKER_BUILDKIT=1 docker build -t eaglercraftx-server:local .
+```
+
 ### Build Issues
 ```bash
 # If build fails due to network issues
@@ -208,17 +222,19 @@ docker images | grep eaglercraftx-server
 ```
 
 ### Can't Connect from Browser
-1. **Check web server:** `curl -I http://localhost:8081`
-2. **Try different browser** (Chrome/Firefox recommended)
-3. **Disable browser extensions** that might block WebSockets
-4. **Check firewall settings**
-5. **Use server IP instead of localhost** when connecting from other devices
+1. **Check port is listening on host:** `ss -tlnp | grep 8081`
+2. **Test from the server itself:** `curl -I http://localhost:8081`
+3. **Try different browser** (Chrome/Firefox recommended)
+4. **Disable browser extensions** that might block WebSockets
+5. **Check firewall settings** (port 8081 must be open)
+6. **Use server IP instead of localhost** when connecting from other devices
 
 ### Can't Join Game
 1. **Verify the server is in the multiplayer list** - it should be pre-configured
 2. **Check browser console** (F12 > Console) for WebSocket errors
 3. **Verify port 8081 is accessible:** `curl -I http://YOUR_SERVER_IP:8081`
-4. **Try different browsers** or clear browser cache
+4. **Check service logs:** `docker exec eaglercraftx-server cat /opt/eaglercraft/logs/bungee.log`
+5. **Try different browsers** or clear browser cache
 
 ### Performance Issues
 ```bash
@@ -280,6 +296,15 @@ docker-compose up -d
 # Clean old images (optional)
 docker image prune -f
 ```
+
+## Migrating from Eaglercraft 1.5.2
+
+If you previously ran the 1.5.2 version of this project:
+
+1. **Old worlds are incompatible** - delete `data/worlds/*` before starting
+2. **Port changed** from 8080+25565 to just 8081
+3. **Image name changed** from `eaglercraft-server:local` to `eaglercraftx-server:local`
+4. See [PLAN.md](PLAN.md) for full migration details and lessons learned
 
 ---
 

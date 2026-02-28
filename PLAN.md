@@ -1,5 +1,9 @@
 # Migration Plan: Eaglercraft 1.5.2 -> EaglercraftX 1.8.8
 
+## Status: COMPLETE
+
+Migration successfully tested and deployed on 2026-02-28.
+
 ## Why Migrate?
 
 The Eaglercraft ecosystem has evolved significantly. EaglercraftX 1.8.8 is now the most
@@ -43,9 +47,22 @@ unifies and simplifies the old BungeeCord-based setup. This migration brings:
 - [x] Rewrite Dockerfile for EaglercraftX 1.8.8 stack
 - [x] Update docker-compose.yml (new port, image name)
 - [x] Update README.md (new architecture, instructions)
-- [ ] Build and test the new Docker image
-- [ ] Verify web client loads in browser
-- [ ] Verify game connection works end-to-end
+- [x] Build and test the new Docker image
+- [x] Verify web client loads in browser
+- [x] Verify game connection works end-to-end
+
+## Lessons Learned During Migration
+
+1. **Plugin directory naming**: EaglerXServer's data directory is `EaglercraftXServer/`
+   (full name), not `EaglerXServer/`. Config files placed in the wrong directory are ignored.
+2. **PandaSpigot paperclip**: The paperclip JAR patches itself on first run and exits.
+   Must run `--initSettings` during Docker build to avoid repeated restarts at runtime.
+3. **User UID matching**: The container user must have UID 1000 to match the init
+   container's `chown 1000:1000` on volume directories, otherwise permission denied errors.
+4. **Web client repos**: Must use repos with PRE-BUILT client files (classes.js, assets.epk).
+   Source-only repos (like 3kh0/eaglercraft-1.8) contain only build tools, not compiled output.
+5. **Dockerfile heredocs**: `cat > file << 'EOF'` syntax does not work in Dockerfile RUN
+   commands (even with BuildKit). Use `printf '%s\n' ... > file` instead.
 
 ## How to Build & Test
 
@@ -61,7 +78,6 @@ docker build -t eaglercraftx-server:local .
 docker-compose up -d
 
 # Test
-curl -I http://localhost:8081          # Should return 200
 docker-compose logs -f eaglercraft     # Watch startup
 # Open http://localhost:8081 in browser
 ```
