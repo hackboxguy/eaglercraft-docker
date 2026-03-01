@@ -29,45 +29,48 @@ RUN echo "=== Downloading Eaglercraft 1.12.2 web client ===" && \
     [ -f "/build/web/assets.epk" ] || { echo "ERROR: assets.epk missing!"; exit 1; } && \
     echo "Validation passed: classes.js and assets.epk found"
 
-# Create index.html with local server pre-configured (no relays, no public servers)
-# Format matches official eaglercraft.dev "u2" client expectations
+# Create index.html matching official eaglercraft.dev structure:
+# - classes.js in <head> (defines TeaVM runtime + main())
+# - game_frame is the <body> element itself (not a child div)
+# - eaglercraftXOpts set in load handler, then main() called to start game
 RUN printf '%s\n' \
     '<!DOCTYPE html>' \
-    '<html>' \
+    '<html lang="und" style="width:100%;height:100%;background-color:black;">' \
     '<head>' \
     '<meta charset="UTF-8">' \
-    '<meta name="viewport" content="width=device-width, initial-scale=1.0">' \
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">' \
     '<title>Eaglercraft 1.12.2</title>' \
-    '<style>' \
-    'html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; }' \
-    '</style>' \
-    '</head>' \
-    '<body>' \
+    '<link type="image/png" rel="shortcut icon" href="favicon.png">' \
+    '<script type="text/javascript" src="classes.js"></script>' \
     '<script type="text/javascript">' \
     '"use strict";' \
-    'window.eaglercraftXOpts = {' \
-    '    container: "game_frame",' \
-    '    assetsURI: "assets.epk",' \
-    '    localesURI: "lang/",' \
-    '    worldsDB: "worlds",' \
-    '    servers: [' \
-    '        { addr: "ws://" + window.location.hostname + ":8081/", name: "Local Server", hideAddr: true }' \
-    '    ],' \
-    '    checkShaderGLErrors: false,' \
-    '    logInvalidCerts: true,' \
-    '    crashOnUncaughtExceptions: true,' \
-    '    enableDownloadOfflineButton: false,' \
-    '    downloadOfflineButtonLink: null,' \
-    '    html5CursorSupport: false,' \
-    '    allowServerRedirects: false,' \
-    '    enableSignatureBadge: false,' \
-    '    enableMinceraft: false,' \
-    '    checkRelaysForUpdates: false,' \
-    '    allowVoiceClient: false' \
-    '};' \
+    'window.addEventListener("load", function() {' \
+    '    window.eaglercraftXOpts = {' \
+    '        demoMode: false,' \
+    '        container: "game_frame",' \
+    '        assetsURI: "assets.epk",' \
+    '        localesURI: "lang/",' \
+    '        worldsDB: "worlds",' \
+    '        logInvalidCerts: true,' \
+    '        crashOnUncaughtExceptions: true,' \
+    '        enableMinceraft: false,' \
+    '        servers: [' \
+    '            { addr: "ws://" + window.location.hostname + ":8081/", name: "Local Server", hideAddr: true }' \
+    '        ],' \
+    '        checkShaderGLErrors: false,' \
+    '        enableDownloadOfflineButton: false,' \
+    '        downloadOfflineButtonLink: null,' \
+    '        html5CursorSupport: false,' \
+    '        allowServerRedirects: false,' \
+    '        enableSignatureBadge: false,' \
+    '        checkRelaysForUpdates: false,' \
+    '        allowVoiceClient: false' \
+    '    };' \
+    '    main();' \
+    '});' \
     '</script>' \
-    '<div style="width:100%;height:100%;" id="game_frame"></div>' \
-    '<script type="text/javascript" src="classes.js"></script>' \
+    '</head>' \
+    '<body style="margin:0;width:100%;height:100%;overflow:hidden;background-color:black;" id="game_frame">' \
     '</body>' \
     '</html>' \
     > /build/web/index.html && \
