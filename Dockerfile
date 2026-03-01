@@ -49,7 +49,6 @@ RUN printf '%s\n' \
     '        demoMode: false,' \
     '        container: "game_frame",' \
     '        assetsURI: "assets.epk",' \
-    '        localesURI: "lang/",' \
     '        worldsDB: "worlds",' \
     '        logInvalidCerts: true,' \
     '        crashOnUncaughtExceptions: true,' \
