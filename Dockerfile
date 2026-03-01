@@ -30,6 +30,7 @@ RUN echo "=== Downloading Eaglercraft 1.12.2 web client ===" && \
     echo "Validation passed: classes.js and assets.epk found"
 
 # Create index.html with local server pre-configured (no relays, no public servers)
+# Format matches official eaglercraft.dev "u2" client expectations
 RUN printf '%s\n' \
     '<!DOCTYPE html>' \
     '<html>' \
@@ -47,16 +48,20 @@ RUN printf '%s\n' \
     'window.eaglercraftXOpts = {' \
     '    container: "game_frame",' \
     '    assetsURI: "assets.epk",' \
+    '    localesURI: "lang/",' \
     '    worldsDB: "worlds",' \
     '    servers: [' \
-    '        { addr: window.location.hostname + ":8081", name: "Local Server", hideAddr: true }' \
+    '        { addr: "ws://" + window.location.hostname + ":8081/", name: "Local Server", hideAddr: true }' \
     '    ],' \
     '    checkShaderGLErrors: false,' \
+    '    logInvalidCerts: true,' \
+    '    crashOnUncaughtExceptions: true,' \
     '    enableDownloadOfflineButton: false,' \
     '    downloadOfflineButtonLink: null,' \
     '    html5CursorSupport: false,' \
     '    allowServerRedirects: false,' \
     '    enableSignatureBadge: false,' \
+    '    enableMinceraft: false,' \
     '    checkRelaysForUpdates: false,' \
     '    allowVoiceClient: false' \
     '};' \
