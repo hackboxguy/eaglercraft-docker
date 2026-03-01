@@ -132,7 +132,7 @@ RUN echo "=== Downloading EaglerXServer plugins ===" && \
 # and are unnecessary since Eaglercraft 1.12.2 client natively speaks protocol 340 (MC 1.12.2)
 RUN echo "=== Downloading Paper plugins ===" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/Plan.jar \
-    "https://github.com/plan-player-analytics/Plan/releases/download/5.6.2965/Plan-5.6-build-2965.jar" && \
+    "https://github.com/plan-player-analytics/Plan/releases/download/5.7.3247/Plan-5.7-build-3247.jar" && \
     echo "Plan downloaded: $(ls -lh $EAGLER_HOME/server/plugins/Plan.jar | awk '{print $5}')" && \
     curl -fSL -o $EAGLER_HOME/server/plugins/Vault.jar \
     "https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar" && \
